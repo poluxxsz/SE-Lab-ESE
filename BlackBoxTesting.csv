@@ -1,0 +1,16 @@
+Test Case ID,Test Description,Input (Phone),Input (Weight),Expected Outcome,Logic / Technique
+TC01,Valid Standard Case,98765,2.0 kg,SUCCESS,Valid ECP (Typical value)
+TC02,BVA: Max Weight Limit,98765,50.0 kg,SUCCESS,Upper Boundary (Valid)
+TC03,BVA: Min Weight Limit,98765,0.01 kg,SUCCESS,Lower Boundary (Valid)
+TC04,BVA: Above Max Weight,98765,50.1 kg,FAILED: Weight Limit Error,Upper Boundary (Invalid)
+TC05,BVA: Zero Weight,98765,0.0 kg,FAILED: Weight Limit Error,Lower Boundary (Invalid)
+TC06,ECP: Short Sender Phone,987,5.0 kg,FAILED: Invalid Phone,Invalid ECP (Phone < 5 chars)
+TC07,ECP: Short Recipient Phone,98765,10.0 kg,FAILED: Invalid Phone,Invalid ECP (Phone < 5 chars)
+TC08,ECP: Negative Weight,98765,-5.0 kg,FAILED: Weight Limit Error,Invalid ECP (Negative value)
+TC09,ECP: Valid Mid-Weight,123456,49.9 kg,SUCCESS,Valid ECP (Near Boundary)
+TC10,ECP: Valid Lower-Weight,123456,0.1 kg,SUCCESS,Valid ECP (Near Boundary)
+TC11,Valid Express Case,0,25.0 kg,SUCCESS,Valid ECP (Standard)
+TC12,BVA: Min Phone Length,123,10.0 kg,FAILED: Invalid Phone,Boundary check for phone length
+TC13,BVA: Extreme High Weight,99999,50.001 kg,FAILED: Weight Limit Error,Extreme upper boundary check
+TC14,BVA: Extreme Low Weight,11111,0.001 kg,SUCCESS,Extreme lower boundary check
+TC15,Valid Typical Case,55555,5.5 kg,SUCCESS,Typical valid input
