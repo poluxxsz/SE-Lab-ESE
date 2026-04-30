@@ -1,0 +1,16 @@
+ID,Logical Path / Predicate,Input (Weight),Input (S-Phone),Input (R-Phone),Expected Outcome,Logic Targeted
+TC01,Branch 1: weight <= 0 (True),-1,99999,99999,FAILED: Weight Logic Path,Decision Coverage
+TC02,Branch 1: weight > MAX (True),51,99999,99999,FAILED: Weight Logic Path,Decision Coverage
+TC03,Branch 1: weight valid (False),10,99999,99999,SUCCESS,Path reaching next branch
+TC04,Branch 2: sPhone < 5 (True),10,123,99999,FAILED: Sender Branch Taken,Branch Coverage
+TC05,Branch 2: sPhone >= 5 (False),10,99999,99999,SUCCESS,Path reaching next branch
+TC06,Branch 3: rPhone < 5 (True),10,99999,123,FAILED: Receiver Branch Taken,Branch Coverage
+TC07,Branch 3: rPhone >= 5 (False),10,99999,99999,SUCCESS,Full Path Success
+TC08,Path: Branch1(F) -> Branch2(T),5,1,99999,FAILED: Sender Branch Taken,Specific Logical Path
+TC09,Path: Branch1(F) -> Branch2(F) -> Branch3(T),5,99999,1,FAILED: Receiver Branch Taken,Specific Logical Path
+TC10,"Full Path Coverage: (F, F, F)",25,12345,12345,SUCCESS,All Decision Branches False
+TC11,Data Flow: trackingID Assignment,1,12345,12345,SUCCESS,Statement Coverage (ID gen)
+TC12,Condition: weight = MAX,50,12345,12345,SUCCESS,Boundary Logic
+TC13,Condition: weight = MIN,0.0001,12345,12345,SUCCESS,Boundary Logic
+TC14,Statement: controller.save() execution,10,55555,55555,SUCCESS,Interaction Coverage
+TC15,Logic: Compound decision skip,10,1,1,FAILED: Sender Branch Taken,Short-circuit Evaluation
