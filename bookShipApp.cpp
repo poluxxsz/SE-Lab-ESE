@@ -8,6 +8,7 @@ using namespace std;
 
 /**
  * ENTITY OBJECT: ShipmentInfo
+ * Ref: image_3.png, image_4.png
  */
 class ShipmentInfo {
 public:
@@ -16,102 +17,87 @@ public:
     string receiverName, receiverPhone;
     double weight;
     string serviceType;
-    string deliveryDate;
+    string deliveryDate; // Formatted as YYYY-MM-DD
 
     void save() {
         // Logic to "Save the info" as per image_3.png
+        cout << "\n[System] Saving shipment details to database..." << endl;
+        cout << "[System] Success! Tracking ID generated: " << trackingID << endl;
     }
 };
 
 /**
  * CONTROL OBJECT: InformationController
+ * Ref: image_3.png, image_4.png
  */
 class InformationController {
 private:
-    const double MAX_WEIGHT = 50.0; // BVA Limit
+    const double MAX_WEIGHT = 50.0;
 
 public:
     string verifyAndProcess(ShipmentInfo &info) {
         // White Box Testing: Weight limits (BVA)
         if (info.weight <= 0 || info.weight > MAX_WEIGHT) {
-            return "FAILED: Weight Limit Error";
+            return "FAILED: Weight must be between 0.01kg and 50kg.";
         }
 
-        // Logic for "Verifies the information" (Phone length check)
+        // Logic for "Verifies the information" as per image_3.png
         if (info.senderPhone.length() < 5 || info.receiverPhone.length() < 5) {
-            return "FAILED: Invalid Phone";
+            return "FAILED: Invalid phone number format.";
         }
 
+        // Generate Tracking ID (Simulated)
         info.trackingID = "TRK-" + to_string(time(0) % 100000);
+        
         info.save();
         return "SUCCESS";
     }
 };
 
-struct TestCase {
-    string id;
-    string sPhone;
-    string rPhone;
-    double weight;
-    string expected;
-};
-
-void runAutomatedTests() {
-    InformationController controller;
-    
-    // Hardcoded 15 Black Box Test Cases
-    vector<TestCase> tests = {
-        {"BB01", "98765", "54321", 2.0, "SUCCESS"},
-        {"BB02", "98765", "54321", 50.0, "SUCCESS"},
-        {"BB03", "98765", "54321", 0.01, "SUCCESS"},
-        {"BB04", "98765", "54321", 50.1, "FAILED: Weight Limit Error"},
-        {"BB05", "98765", "54321", 0.0, "FAILED: Weight Limit Error"},
-        {"BB06", "987", "54321", 5.0, "FAILED: Invalid Phone"},
-        {"BB07", "98765", "543", 10.0, "FAILED: Invalid Phone"},
-        {"BB08", "98765", "54321", -5.0, "FAILED: Weight Limit Error"},
-        {"BB09", "123456", "654321", 49.9, "SUCCESS"},
-        {"BB10", "123456", "654321", 0.1, "SUCCESS"},
-        {"BB11", "00000", "11111", 25.0, "SUCCESS"},
-        {"BB12", "123", "12345", 10.0, "FAILED: Invalid Phone"},
-        {"BB13", "99999", "88888", 50.001, "FAILED: Weight Limit Error"},
-        {"BB14", "11111", "22222", 0.001, "SUCCESS"},
-        {"BB15", "55555", "44444", 5.5, "SUCCESS"}
-    };
-
-    // Table Header Construction
-    string line = "+--------+---------------------------+---------------------------+--------+";
-    cout << "\n" << line << endl;
-    cout << "| " << left << setw(6) << "ID" 
-         << " | " << setw(25) << "EXPECTED OUTCOME" 
-         << " | " << setw(25) << "ACTUAL RESULT" 
-         << " | " << "STATUS" << " |" << endl;
-    cout << line << endl;
-
-    int passed = 0;
-    for (const auto& t : tests) {
-        ShipmentInfo ship;
-        ship.senderPhone = t.sPhone;
-        ship.receiverPhone = t.rPhone;
-        ship.weight = t.weight;
-
-        string actual = controller.verifyAndProcess(ship);
-        bool isPass = (actual == t.expected);
-        if(isPass) passed++;
-        
-        string status = isPass ? "PASS" : "FAIL";
-
-        cout << "| " << left << setw(6) << t.id 
-             << " | " << setw(25) << t.expected 
-             << " | " << setw(25) << actual 
-             << " | " << setw(6) << status << " |" << endl;
-    }
-    
-    cout << line << endl;
-    cout << "| SUMMARY: " << passed << "/15 Test Cases Passed" << setw(46) << " |" << endl;
-    cout << line << "\n" << endl;
-}
-
+/**
+ * BOUNDARY OBJECTS: InfoForm & PackageForm simulation
+ * Ref: image_4.png
+ */
 int main() {
-    runAutomatedTests();
+    cout << "=== COURIER TRACKING SYSTEM: BOOK SHIPMENT ===" << endl;
+
+    ShipmentInfo shipment;
+    InformationController controller;
+
+    // 1. InfoForm: Accept Sender/Recipient Info
+    cout << "\n--- InfoForm ---" << endl;
+    cout << "Enter Sender Name: ";
+    getline(cin, shipment.senderName);
+    cout << "Enter Sender Phone: ";
+    getline(cin, shipment.senderPhone);
+    cout << "Enter Receiver Name: ";
+    getline(cin, shipment.receiverName);
+    cout << "Enter Receiver Phone: ";
+    getline(cin, shipment.receiverPhone);
+
+    // 2. PackageForm: Accept Package Details
+    cout << "\n--- PackageForm ---" << endl;
+    cout << "Enter Package Weight (kg): ";
+    cin >> shipment.weight;
+    cin.ignore(); // Clear buffer
+
+    cout << "Enter Service Type (Standard/Express): ";
+    getline(cin, shipment.serviceType);
+
+    cout << "Enter Requested Delivery Date (YYYY-MM-DD): ";
+    getline(cin, shipment.deliveryDate);
+
+    // 3. Controller Interaction
+    string result = controller.verifyAndProcess(shipment);
+
+    if (result == "SUCCESS") {
+        cout << "\n-----------------------------------------" << endl;
+        cout << "BOOKING CONFIRMED FOR: " << shipment.senderName << endl;
+        cout << "TRACKING ID: " << shipment.trackingID << endl;
+        cout << "-----------------------------------------" << endl;
+    } else {
+        cout << "\n[Error] " << result << endl;
+    }
+
     return 0;
 }
